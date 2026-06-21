@@ -113,6 +113,11 @@ Incident details are forwarded to an external incident management endpoint for t
 | Webhooks | Incident Integration |
 | Ubuntu Linux | Lab Environment |
 
+## Skills Demonstrated
+
+`Wazuh` • `SIEM` • `SOC Operations` • `Threat Intelligence` • `Incident Response` • `File Integrity Monitoring (FIM)` • `Security Automation` • `VirusTotal API` • `Workflow Orchestration` • `Malware Analysis` • `API Integration` • `n8n`
+
+
 ---
 
 ## Screenshots
