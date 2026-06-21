@@ -209,7 +209,7 @@
       "webhookId": "YOUR_GMAIL_WEBHOOK_ID",
       "credentials": {
         "gmailOAuth2": {
-          "id": "YOUR_GMAIL_CREDENTIAL",
+          "id": "YOUR_GMAIL_CREDENTIAL ID",
           "name": "YOUR_GMAIL_CREDENTIAL"
         }
       }
