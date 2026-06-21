@@ -1,0 +1,311 @@
+{
+  "name": "Wazuh VirusTotal Incident Response",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "1f6cc847-3577-4039-af90-93d02d316e04",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "1144b0c8-c96c-4bd5-8636-52111bd58d1b",
+      "name": "Webhook",
+      "webhookId": "1f6cc847-3577-4039-af90-93d02d316e04"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "ef5d7948-72af-4de5-8002-0f7afe56ff73",
+              "name": "=sha256",
+              "value": "={{$json.body.syscheck.sha256_after}}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        208,
+        0
+      ],
+      "id": "c02dfbf3-99e8-4d12-8c6b-558b01adacbc",
+      "name": "Extract SHA256"
+    },
+    {
+      "parameters": {
+        "url": "=https://www.virustotal.com/api/v3/files/{{$json.sha256}}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "x-apikey",
+              "value": "4473b474d2d957ba27cd657c1a0aa1229f370a407e8143678a2bc4b1fe58d126"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        416,
+        0
+      ],
+      "id": "5cfcbf0d-18c9-4ad4-93f0-736d57db5688",
+      "name": "VIRUSTOTAL NODE ADDED",
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "a8ce0e16-02d4-4412-8227-c214fd8664de",
+              "name": "sha256",
+              "value": "={{$json.data.attributes.sha256}}",
+              "type": "string"
+            },
+            {
+              "id": "d9dbfddf-e6fb-4f5b-b32f-c56cdc9959fd",
+              "name": "malicious",
+              "value": "={{$json.data.attributes.last_analysis_stats.malicious}}",
+              "type": "string"
+            },
+            {
+              "id": "fc1fa655-b018-4365-85b5-5cf1dc8601fc",
+              "name": "status",
+              "value": "=MALICIOUS",
+              "type": "string"
+            },
+            {
+              "id": "37efd5b9-e951-4b58-8b05-4756edcbc274",
+              "name": "recommended_action",
+              "value": "=CREATE INCIDENT",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        688,
+        -16
+      ],
+      "id": "fc82c8fa-1198-4327-bb41-cd508dc94ed5",
+      "name": "Generate File Summary",
+      "notesInFlow": false
+    },
+    {
+      "parameters": {
+        "html": "\n<!DOCTYPE html>\n<html>\n<head>\n    <style>\n        body {\n            font-family: Arial, sans-serif;\n            background-color: #f4f4f4;\n            padding: 20px;\n        }\n        .container {\n            background-color: white;\n            padding: 20px;\n            border-radius: 8px;\n            border-left: 6px solid #d32f2f;\n            max-width: 700px;\n        }\n        h1 {\n            color: #d32f2f;\n        }\n        table {\n            border-collapse: collapse;\n            width: 100%;\n            margin-top: 15px;\n        }\n        table, th, td {\n            border: 1px solid #ddd;\n        }\n        th {\n            background-color: #f8f8f8;\n            text-align: left;\n            padding: 10px;\n        }\n        td {\n            padding: 10px;\n        }\n        .alert {\n            color: #d32f2f;\n            font-weight: bold;\n        }\n        .footer {\n            margin-top: 20px;\n            font-size: 12px;\n            color: gray;\n        }\n    </style>\n</head>\n<body>\n\n<div class=\"container\">\n\n<h1>🚨 WAZUH SECURITY INCIDENT REPORT</h1>\n\n<p>\nA suspicious file was detected and analyzed using VirusTotal.\n</p>\n\n<table>\n<tr>\n    <th>SHA256 Hash</th>\n    <td>{{$json.sha256}}</td>\n</tr>\n\n<tr>\n    <th>VirusTotal Malicious Score</th>\n    <td>{{$json.malicious}}</td>\n</tr>\n\n<tr>\n    <th>Status</th>\n    <td class=\"alert\">{{$json.status}}</td>\n</tr>\n\n<tr>\n    <th>Recommended Action</th>\n    <td>{{$json.recommended_action}}</td>\n</tr>\n\n<tr>\n    <th>Detection Time</th>\n    <td>{{ $now }}</td>\n</tr>\n</table>\n\n<h3>Analyst Recommendation</h3>\n\n<p>\nThe file has been flagged by multiple security vendors on VirusTotal.\nImmediate investigation is recommended. Review affected systems,\nidentify the source of the file, and initiate incident response procedures if required.\n</p>\n\n<div class=\"footer\">\nGenerated automatically by Wazuh + n8n + VirusTotal\n</div>\n\n</div>\n\n</body>\n</html>"
+      },
+      "type": "n8n-nodes-base.html",
+      "typeVersion": 1.2,
+      "position": [
+        944,
+        -208
+      ],
+      "id": "9b5b3f4c-60e2-486f-bfc8-f92123028508",
+      "name": "File Summary Display"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "a8415950-5b3e-43eb-a2f0-e43bf3eb4080",
+              "leftValue": "={{$json[\"malicious\"]}}",
+              "rightValue": 0,
+              "operator": {
+                "type": "number",
+                "operation": "gt"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "looseTypeValidation": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        960,
+        176
+      ],
+      "id": "5d4c2182-379c-48b0-b142-cf5ce0d43b70",
+      "name": "Malicious File Decision"
+    },
+    {
+      "parameters": {
+        "select": "channel",
+        "channelId": {
+          "__rl": true,
+          "mode": "id",
+          "value": ""
+        },
+        "otherOptions": {}
+      },
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.5,
+      "position": [
+        1200,
+        16
+      ],
+      "id": "2e9cfe7a-7490-4bfc-a4ca-22f784e3e16c",
+      "name": "Send Slack Alert",
+      "webhookId": "1112023c-bdd8-46b7-b9b5-f48be35bd4a2"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://webhook.site/594dc691-5d03-4a88-a005-71358adce868",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"sha256\": \"{{$json.sha256}}\",\n  \"malicious\": \"{{$json.malicious}}\",\n  \"status\": \"{{$json.status}}\",\n  \"recommended_action\": \"{{$json.recommended_action}}\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        1200,
+        288
+      ],
+      "id": "66827e10-2a62-4273-a967-ff7880799315",
+      "name": "Create Security Incident"
+    },
+    {
+      "parameters": {
+        "sendTo": "bhavyatasuthar06112005@gmail.com",
+        "subject": "=🚨 Wazuh Alert - {{$node[\"Generate File Summary\"].json[\"malicious\"]}} Detections",
+        "message": "={{$json.html}}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        1200,
+        -208
+      ],
+      "id": "419f4b46-d6da-4991-bfb3-916b1b920f9b",
+      "name": "Send Email Alert",
+      "webhookId": "ae8ee4f3-d617-4796-9873-9984681de0d4",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "JsicffjTFoZqt9Aw",
+          "name": "Gmail OAuth2 API"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Extract SHA256",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract SHA256": {
+      "main": [
+        [
+          {
+            "node": "VIRUSTOTAL NODE ADDED",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "VIRUSTOTAL NODE ADDED": {
+      "main": [
+        [
+          {
+            "node": "Generate File Summary",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate File Summary": {
+      "main": [
+        [
+          {
+            "node": "Malicious File Decision",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "File Summary Display",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "File Summary Display": {
+      "main": [
+        [
+          {
+            "node": "Send Email Alert",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Malicious File Decision": {
+      "main": [
+        [
+          {
+            "node": "Send Slack Alert",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Create Security Incident",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "6fe83831-9b7f-4eac-b90c-cf8d586b5ba3",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "c8f8f53d28c16530226b28f43839c03b8c8e523314871f90567e726060c93c64"
+  },
+  "nodeGroups": [],
+  "id": "bfvKu1vi5Kk4cHG9",
+  "tags": []
+}
