@@ -4,7 +4,7 @@
     {
       "parameters": {
         "httpMethod": "POST",
-        "path": "1f6cc847-3577-4039-af90-93d02d316e04",
+        "path": "YOUR_WEBHOOK_PATH",
         "options": {}
       },
       "type": "n8n-nodes-base.webhook",
@@ -15,7 +15,7 @@
       ],
       "id": "1144b0c8-c96c-4bd5-8636-52111bd58d1b",
       "name": "Webhook",
-      "webhookId": "1f6cc847-3577-4039-af90-93d02d316e04"
+      "webhookId": "YOUR_WEBHOOK_ID"
     },
     {
       "parameters": {
@@ -48,7 +48,7 @@
           "parameters": [
             {
               "name": "x-apikey",
-              "value": "4473b474d2d957ba27cd657c1a0aa1229f370a407e8143678a2bc4b1fe58d126"
+              "value":"YOUR_VIRUSTOTAL_API_KEY"
             }
           ]
         },
@@ -171,12 +171,12 @@
       ],
       "id": "2e9cfe7a-7490-4bfc-a4ca-22f784e3e16c",
       "name": "Send Slack Alert",
-      "webhookId": "1112023c-bdd8-46b7-b9b5-f48be35bd4a2"
+      "webhookId":"YOUR_SLACK_WEBHOOK_ID"
     },
     {
       "parameters": {
         "method": "POST",
-        "url": "https://webhook.site/594dc691-5d03-4a88-a005-71358adce868",
+        "url": "https://webhook.site/YOUR_INCIDENT_ENDPOINT",
         "sendBody": true,
         "specifyBody": "json",
         "jsonBody": "={\n  \"sha256\": \"{{$json.sha256}}\",\n  \"malicious\": \"{{$json.malicious}}\",\n  \"status\": \"{{$json.status}}\",\n  \"recommended_action\": \"{{$json.recommended_action}}\"\n}",
@@ -193,7 +193,7 @@
     },
     {
       "parameters": {
-        "sendTo": "bhavyatasuthar06112005@gmail.com",
+        "sendTo": "your-email@example.com",
         "subject": "=🚨 Wazuh Alert - {{$node[\"Generate File Summary\"].json[\"malicious\"]}} Detections",
         "message": "={{$json.html}}",
         "options": {}
@@ -206,11 +206,11 @@
       ],
       "id": "419f4b46-d6da-4991-bfb3-916b1b920f9b",
       "name": "Send Email Alert",
-      "webhookId": "ae8ee4f3-d617-4796-9873-9984681de0d4",
+      "webhookId": "YOUR_GMAIL_WEBHOOK_ID",
       "credentials": {
         "gmailOAuth2": {
-          "id": "JsicffjTFoZqt9Aw",
-          "name": "Gmail OAuth2 API"
+          "id": "YOUR_GMAIL_CREDENTIAL",
+          "name": "YOUR_GMAIL_CREDENTIAL"
         }
       }
     }
@@ -303,7 +303,7 @@
   "versionId": "6fe83831-9b7f-4eac-b90c-cf8d586b5ba3",
   "meta": {
     "templateCredsSetupCompleted": true,
-    "instanceId": "c8f8f53d28c16530226b28f43839c03b8c8e523314871f90567e726060c93c64"
+    "instanceId": "YOUR_N8N_INSTANCE_ID"
   },
   "nodeGroups": [],
   "id": "bfvKu1vi5Kk4cHG9",
