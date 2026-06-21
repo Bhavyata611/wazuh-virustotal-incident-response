@@ -209,7 +209,7 @@
       "webhookId": "YOUR_GMAIL_WEBHOOK_ID",
       "credentials": {
         "gmailOAuth2": {
-          "id": "YOUR_GMAIL_CREDENTIAL ID",
+          "id": "YOUR_GMAIL_CREDENTIAL_ID",
           "name": "YOUR_GMAIL_CREDENTIAL"
         }
       }
@@ -300,12 +300,12 @@
     "binaryMode": "separate",
     "availableInMCP": false
   },
-  "versionId": "6fe83831-9b7f-4eac-b90c-cf8d586b5ba3",
+  "versionId":"DEMO_VERSION_ID",
   "meta": {
     "templateCredsSetupCompleted": true,
     "instanceId": "YOUR_N8N_INSTANCE_ID"
   },
   "nodeGroups": [],
-  "id": "bfvKu1vi5Kk4cHG9",
+  "id": "DEMO_VERSION_ID",
   "tags": []
 }
